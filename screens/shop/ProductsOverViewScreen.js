@@ -6,7 +6,10 @@ import ProductItem from '../../components/shop/ProductItem';
 const ProductsOverViewScreen = props => {
     const products = useSelector(state => state.products.availableProducts);
     return <FlatList data={products} keyExtractor={item => item.id}
-                     renderItem={({item}) => <ProductItem image={item.image} title={item.title}
+                     renderItem={({item}) => <ProductItem onViewDetail={() => props.navigation.navigate({
+                         routeName: 'ProductDetailScreen',
+                         params: {productId: item.id, productTitle: item.title},
+                     })} image={item.image} title={item.title}
                                                           price={item.price}/>}/>
 };
 
