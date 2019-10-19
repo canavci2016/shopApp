@@ -59,10 +59,12 @@ const styles = StyleSheet.create({
         height: '60%',
     },
     title: {
+        fontFamily:'open-sans-bold',
         fontSize: 18,
-        marginVertical: 4,
+        marginVertical: 2,
     },
     price: {
+        fontFamily:'open-sans-bold',
         fontSize: 14,
         color: '#888',
     },
