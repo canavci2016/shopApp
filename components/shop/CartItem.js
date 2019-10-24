@@ -15,7 +15,7 @@ const CartItem = props => {
                 {props.amount.toFixed(2)}
             </Text>
             <TouchableCmp onPress={props.onRemove} style={styles.deleteButton}>
-                <Ionicons name={Platform.OS == 'android' ? 'md-trash' : 'ios-trash'} size={23} color={'red'}/>
+                <Ionicons name={Platform.OS == 'android' ? 'md-trash' : 'ios-trash'} size={30} color={'red'}/>
             </TouchableCmp>
         </View>
     </View>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     deleteButton: {
-        marginLeft: 20,
+        marginLeft: 15,
     },
 
 });
