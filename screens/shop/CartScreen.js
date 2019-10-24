@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, FlatList, Button, StyleSheet} from "react-native";
 import {useSelector} from "react-redux";
 import Colors from "../../constants/Colors";
+import CartItem from '../../components/shop/CartItem';
 
 const CartScreen = props => {
     const cartTotalAmount = useSelector(state => state.carts.totalAmount);
@@ -10,7 +11,7 @@ const CartScreen = props => {
         for (const key in state.carts.items) {
             transFormed.push({
                 productId: key,
-                productTitle: state.carts.items[key].title,
+                productTitle: state.carts.items[key].productTitle,
                 productPrice: state.carts.items[key].price,
                 quantity: state.carts.items[key].quantity,
                 sum: state.carts.items[key].sum,
@@ -18,7 +19,6 @@ const CartScreen = props => {
         }
         return transFormed;
     });
-    console.log(items);
 
     return <View style={styles.screen}>
         <View style={styles.summary}>
@@ -26,9 +26,12 @@ const CartScreen = props => {
                 style={styles.amont}>${cartTotalAmount.toFixed(2)}</Text></Text>
             <Button title={'Order Now'} disabled={items.length === 0}/>
         </View>
-        <View>
-            <Text>CART ITEMS</Text>
-        </View>
+        <FlatList data={items} keyExtractor={item => item.productId}
+                  renderItem={({item}) => <CartItem title={item.productTitle}
+                                                    quantity={item.quantity}
+                                                    amount={item.sum}
+                                                    onRemove={()=>console.log('wdawd')}
+                  />}/>
     </View>
 
 }
