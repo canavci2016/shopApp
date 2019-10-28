@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from "react-redux";
 import Colors from "../../constants/Colors";
 import CartItem from '../../components/shop/CartItem';
 import * as cartActions from '../../store/actions/cart';
+import * as orderActions from '../../store/actions/order';
 
 const CartScreen = props => {
     const cartTotalAmount = useSelector(state => state.carts.totalAmount);
@@ -19,14 +20,15 @@ const CartScreen = props => {
                 sum: state.carts.items[key].sum,
             })
         }
-        return transFormed.sort((a, b) => a.productId > b.productId.id  ? 1 : -1);
+        return transFormed.sort((a, b) => a.productId > b.productId.id ? 1 : -1);
     });
 
     return <View style={styles.screen}>
         <View style={styles.summary}>
             <Text style={styles.summaryText}> Total : <Text
                 style={styles.amont}>${cartTotalAmount.toFixed(2)}</Text></Text>
-            <Button title={'Order Now'} disabled={items.length === 0}/>
+            <Button title={'Order Now'} disabled={items.length === 0}
+                    onPress={() => dispatch(orderActions.addOrder(items, cartTotalAmount))}/>
         </View>
         <FlatList data={items} keyExtractor={item => item.productId}
                   renderItem={({item}) => <CartItem title={item.productTitle}
