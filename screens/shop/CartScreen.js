@@ -40,6 +40,10 @@ const CartScreen = props => {
 
 }
 
+CartScreen.navigationOptions = {
+    headerTitle: 'Your Carts'
+};
+
 const styles = StyleSheet.create({
     screen: {
         margin: 20,
