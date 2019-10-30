@@ -14,9 +14,9 @@ const CartItem = props => {
             <Text style={styles.amount}>
                 {props.amount.toFixed(2)}
             </Text>
-            <TouchableCmp onPress={props.onRemove} style={styles.deleteButton}>
+            {props.deleteable && <TouchableCmp onPress={props.onRemove} style={styles.deleteButton}>
                 <Ionicons name={Platform.OS == 'android' ? 'md-trash' : 'ios-trash'} size={30} color={'red'}/>
-            </TouchableCmp>
+            </TouchableCmp>}
         </View>
     </View>
 };
