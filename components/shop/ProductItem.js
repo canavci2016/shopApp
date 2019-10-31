@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, Button, TouchableOpacity, TouchableNativeFeedback, Platform} from "react-native";
-import Colors from "../../constants/Colors";
 
 const ProductItem = props => {
     const TouchableCmp = (Platform.OS == 'android' && Platform.Version > 20) ? TouchableNativeFeedback : TouchableOpacity;
@@ -43,7 +42,7 @@ const styles = StyleSheet.create({
     },
     detail: {
         alignItems: 'center',
-        height: '15%',
+        height: '17%',
         padding: 10,
 
     },
@@ -58,12 +57,12 @@ const styles = StyleSheet.create({
         height: '60%',
     },
     title: {
-        fontFamily:'open-sans-bold',
+        fontFamily: 'open-sans-bold',
         fontSize: 18,
         marginVertical: 2,
     },
     price: {
-        fontFamily:'open-sans-bold',
+        fontFamily: 'open-sans-bold',
         fontSize: 14,
         color: '#888',
     },
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: '25%',
+        height: '23%',
         paddingHorizontal: 20,
     }
 });

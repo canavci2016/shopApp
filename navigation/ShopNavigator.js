@@ -6,6 +6,7 @@ import ProductDetail from '../screens/shop/ProductDetail';
 import CartScreen from '../screens/shop/CartScreen';
 import OrderScreen from '../screens/shop/Order';
 import UserProductScreen from '../screens/user/UserProduct';
+import EditProductScreen from '../screens/user/EditProduct';
 import {createDrawerNavigator} from "react-navigation-drawer";
 import Colors from '../constants/Colors';
 import {Platform} from 'react-native';
@@ -57,8 +58,11 @@ const OrdersNavigator = createStackNavigator({
 });
 
 const UserNavigator = createStackNavigator({
-    OrdersScreen: {
-        screen: UserProductScreen
+    UserProductScreen: {
+        screen: UserProductScreen,
+    },
+    EditProductScreen: {
+        screen: EditProductScreen,
     },
 }, {
     navigationOptions: {
