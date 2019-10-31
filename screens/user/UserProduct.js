@@ -1,11 +1,11 @@
 import React from 'react';
-import {FlatList, Platform} from "react-native";
-
+import {Button, FlatList, Platform} from "react-native";
 import {useSelector} from "react-redux";
 
 import ProductItem from '../../components/shop/ProductItem';
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import HeaderButton from '../../components/UI/HeaderButton';
+import Colors from "../../constants/Colors";
 
 
 const UserProduct = props => {
@@ -13,11 +13,11 @@ const UserProduct = props => {
 
     return <FlatList data={products} keyExtractor={item => item.id} renderItem={({item}) =>
         <ProductItem title={item.title} image={item.image} price={item.price}
-                     onViewDetail={() => {
-                     }}
-                     onAddtoCart={() => {
-                     }}
-        />
+                     onSelect={() => {
+                     }} >
+            <Button color={Colors.primary} title={'Edit'} onPress={() => console.log('UserProduct-Edit')}/>
+            <Button color={Colors.accent} title={'Delete'} onPress={() => console.log('UserProduct-Delete')}/>
+        </ProductItem>
     }/>
 }
 
