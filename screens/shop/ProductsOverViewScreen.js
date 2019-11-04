@@ -16,7 +16,7 @@ const ProductsOverViewScreen = props => {
             routeName: 'ProductDetailScreen',
             params: {productId: id, productTitle: title},
         });
-    }
+    };
 
 
     return <FlatList data={products} keyExtractor={item => item.id}

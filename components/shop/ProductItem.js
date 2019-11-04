@@ -1,10 +1,11 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, Button, TouchableOpacity, TouchableNativeFeedback, Platform} from "react-native";
+import {View, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform} from "react-native";
+import Card from '../UI/Card';
 
 const ProductItem = props => {
     const TouchableCmp = (Platform.OS == 'android' && Platform.Version > 20) ? TouchableNativeFeedback : TouchableOpacity;
 
-    return <View style={styles.container}>
+    return <Card style={styles.container}>
         <View style={styles.touchable}>
             <TouchableCmp onPress={props.onSelect} useForeground>
                 <View>
@@ -21,18 +22,11 @@ const ProductItem = props => {
                 </View>
             </TouchableCmp>
         </View>
-    </View>
+    </Card>
 };
 
 const styles = StyleSheet.create({
     container: {
-        shadowColor: 'black',
-        shadowOpacity: 0.26,
-        shadowOffset: {width: 0, height: 21},
-        shadowRadius: 8,
-        elevation: 5,
-        borderRadius: 10,
-        backgroundColor: 'white',
         height: 300,
         margin: 20,
     },
