@@ -1,23 +1,60 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useReducer} from 'react';
 import {View, Text, ScrollView, TextInput, StyleSheet, Platform, Alert} from "react-native";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import HeaderButton from '../../components/UI/HeaderButton';
-import {connect, useSelector} from "react-redux";
+import {connect} from "react-redux";
 import * as productActions from '../../store/actions/product';
+
+const FORM_INPUT_UPDATE = 'UPDATE';
+const formReducer = (state, action) => {
+
+  if (action.type === FORM_INPUT_UPDATE) {
+    const updateValues = {
+      ...state.inputValues,
+      [action.input]: action.value
+    };
+
+    const updatedValidities = {
+      ...state.inputValues,
+      [action.input]: action.isValid
+    };
+
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+
+    return {formIsValid: updatedFormIsValid, inputValues: updateValues, inputValidities: updatedValidities};
+  }
+
+  return state;
+}
 
 const EditProduct = props => {
   const prodId = props.navigation.getParam('productId');
   const product = props.userProducts.find(prod => prod.id === prodId);
 
-  const [title, setTitle] = useState(product ? product.title : '');
-  const [titleIsValid, setTitleIsValid] = useState(false);
 
-  const [imageUrl, setImageUrl] = useState(product ? product.image : '');
-  const [price, setPrice] = useState(product ? product.price : '');
-  const [description, setDescription] = useState(product ? product.description : '');
+  const [formState, dispatch] = useReducer(formReducer, {
+    inputValues: {
+      title: product ? product.title : '',
+      imageUrl: product ? product.image : '',
+      price: product ? product.price : '',
+      description: product ? product.description : '',
+    },
+    inputValidities: {
+      title: product ? true : false,
+      imageUrl: product ? true : false,
+      description: product ? true : false,
+      price: product ? true : false,
+    },
+    formIsValid: product ? true : false,
+  });
+
+  const {title, imageUrl, price, description} = formState.inputValues;
 
   const submitHandler = useCallback(() => {
-    if (!titleIsValid) {
+    if (!formState.formIsValid) {
       Alert.alert('Input Validations', 'Please Check validations', [{text: 'Okey'}]);
       return true;
     }
@@ -27,17 +64,12 @@ const EditProduct = props => {
       props.createProduct(title, description, +price, imageUrl);
     }
     props.navigation.goBack();
-  }, [product, title, imageUrl, price, description, titleIsValid]);
+  }, [product, title, imageUrl, price, description, formState]);
 
 
-  const titleChangeHandler = text => {
-    if (text.trim().length === 0) {
-      setTitleIsValid(false);
-    }
-    else {
-      setTitleIsValid(true);
-    }
-    setTitle(text);
+  const textChangeHandler = (inputIdentifier, text) => {
+    let isValid = text.trim().length > 0 ? true : false;
+    dispatch({type: FORM_INPUT_UPDATE, value: text, isValid, input: inputIdentifier});
   };
 
   useEffect(() => {
@@ -55,13 +87,13 @@ const EditProduct = props => {
           autoCapitalize={'sentences'}
           autoCorrect
           keyboardType={'default'}
-          onChangeText={titleChangeHandler}
+          onChangeText={textChangeHandler.bind(this, 'title')}
           returnKeyType={'next'}
           onEndEditing={() => console.log('onEndEditing')}
           onSubmitEditing={() => console.log('onSubmitEditing')}
 
         />
-        {!titleIsValid && <Text>Please Enter a valid Title</Text>}
+        {!formState.inputValidities.title && <Text>Please Enter a valid Title</Text>}
       </View>
 
       <View style={styles.formControl}>
@@ -69,16 +101,23 @@ const EditProduct = props => {
         <TextInput style={styles.input}
                    value={imageUrl}
                    returnKeyType={'done'}
+                   onChangeText={textChangeHandler.bind(this, 'imageUrl')}
                    onChangeText={text => setImageUrl(text)}/>
       </View>
       <View style={styles.formControl}>
         <Text style={styles.label}>Price</Text>
-        <TextInput style={styles.input} keyboardType={'decimal-pad'} value={price.toString()}
-                   onChangeText={text => setPrice(text)}/>
+        <TextInput style={styles.input}
+                   keyboardType={'decimal-pad'}
+                   value={price.toString()}
+                   onChangeText={textChangeHandler.bind(this, 'price')}
+        />
       </View>
       <View style={styles.formControl}>
         <Text style={styles.label}>Description</Text>
-        <TextInput style={styles.input} value={description} onChangeText={text => setDescription(text)}/>
+        <TextInput style={styles.input}
+                   value={description}
+                   onChangeText={textChangeHandler.bind(this, 'description')}
+        />
       </View>
     </View>
   </ScrollView>
