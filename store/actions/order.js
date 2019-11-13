@@ -1,5 +1,26 @@
-
+import Order from "../../models/order";
 export const ADD_ORDER = 'ADD_ORDER';
+export const SET_ORDERS = 'SET_ORDERS';
+
+
+export const fetchOrders = () => {
+    return async dispatch => {
+        try {
+            const response = await fetch('https://map-api-1531502761988.firebaseio.com/orders/u1.json');
+            const resData = await response.json();
+            const loadedOrders = [];
+            for (const key in resData) {
+                const order = resData[key];
+                loadedOrders.push(new Order(key, order.cartItems, order.totalAmount, new Date(order.date)));
+            }
+
+            dispatch({type: SET_ORDERS, orders: loadedOrders});
+        } catch (e) {
+            throw  e;
+        }
+    };
+};
+
 
 export const addOrder = (cartItems, totalAmount) => {
 

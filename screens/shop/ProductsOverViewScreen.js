@@ -11,6 +11,7 @@ import Colors from "../../constants/Colors";
 
 const ProductsOverViewScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isRefresh, setIsRefresh] = useState(false);
     const [error, setError] = useState(null);
     const products = useSelector(state => state.products.availableProducts);
     const dispatch = useDispatch();
@@ -23,16 +24,15 @@ const ProductsOverViewScreen = props => {
     };
 
     const loadProducts = useCallback(async () => {
-        setIsLoading(true);
         setError(null);
+        setIsRefresh(true);
         try {
             await dispatch(productActions.fetchProducts());
         } catch (e) {
             setError(e.message);
         }
-
-        setIsLoading(false);
-    }, [setIsLoading, dispatch]);
+        setIsRefresh(false);
+    }, [dispatch]);
 
     useEffect(() => {
         const willFocusSub = props.navigation.addListener('willFocus', loadProducts);
@@ -42,7 +42,8 @@ const ProductsOverViewScreen = props => {
     }, [loadProducts]);
 
     useEffect(() => {
-        loadProducts();
+        setIsLoading(true);
+        loadProducts().then(() => setIsLoading(false));
     }, [dispatch, loadProducts]);
 
     if (isLoading) {
@@ -62,7 +63,7 @@ const ProductsOverViewScreen = props => {
         </View>;
     }
 
-    return <FlatList data={products} keyExtractor={item => item.id}
+    return <FlatList refreshing={isRefresh} onRefresh={loadProducts} data={products} keyExtractor={item => item.id}
                      renderItem={({item}) => <ProductItem
                          onSelect={() => selectHandler(item.id, item.title)}
                          image={item.image} title={item.title}
