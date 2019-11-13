@@ -5,21 +5,14 @@ import HeaderButton from '../../components/UI/HeaderButton';
 import {connect} from "react-redux";
 import * as productActions from '../../store/actions/product';
 import Input from '../../components/UI/Input';
+import Loading from '../../components/UI/Loading';
 
 const FORM_INPUT_UPDATE = 'UPDATE';
 const formReducer = (state, action) => {
 
     if (action.type === FORM_INPUT_UPDATE) {
-        const updateValues = {
-            ...state.inputValues,
-            [action.input]: action.value
-        };
-
-        const updatedValidities = {
-            ...state.inputValues,
-            [action.input]: action.isValid
-        };
-
+        const updateValues = {...state.inputValues, [action.input]: action.value};
+        const updatedValidities = {...state.inputValues, [action.input]: action.isValid};
         let updatedFormIsValid = true;
         for (const key in updatedValidities) {
             updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
@@ -57,19 +50,35 @@ const EditProduct = props => {
 
     const {title, imageUrl, price, description} = formState.inputValues;
 
-    const submitHandler = useCallback(() => {
+    const submitHandler = useCallback(async () => {
         if (!formState.formIsValid) {
             Alert.alert('Input Validations', 'Please Check validations', [{text: 'Okey'}]);
             return true;
         }
-        if (product) {
-            props.updateProduct(product.id, title, description, imageUrl);
-        } else {
-            props.createProduct(title, description, +price, imageUrl);
+
+        setIsLoadind(true);
+        setError(null);
+
+        try {
+            if (product) {
+                await props.updateProduct(product.id, title, description, imageUrl);
+            } else {
+                await props.createProduct(title, description, +price, imageUrl);
+            }
+            props.navigation.goBack();
+        } catch (e) {
+            setError(e.message);
         }
-        //   props.navigation.goBack();
+
+        setIsLoadind(false);
+
     }, [product, title, imageUrl, price, description, formState]);
 
+    useEffect(() => {
+        if (error) {
+            Alert.alert('An Error Occured', 'Please Check validations', [{text: 'Okey'}]);
+        }
+    }, [error]);
 
     const inputChangeHandler = useCallback((inputIdentifier, value, isValid) => {
         dispatch({type: FORM_INPUT_UPDATE, value, isValid, input: inputIdentifier});
@@ -79,6 +88,10 @@ const EditProduct = props => {
         console.log('EditProduct-useEffect');
         props.navigation.setParams({'submit': submitHandler});
     }, [submitHandler]);
+
+    if (isLoading) {
+        return <Loading/>
+    }
 
     return <KeyboardAvoidingView style={{flex: 1}} behavior={'padding'} keyboardVerticalOffset={100}>
         <ScrollView>
