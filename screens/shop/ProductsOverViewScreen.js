@@ -1,11 +1,12 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {Button, FlatList, Platform, View, ActivityIndicator, StyleSheet, Text} from "react-native";
+import {Button, FlatList, Platform, View, StyleSheet, Text} from "react-native";
 import {useSelector, useDispatch} from "react-redux";
 import ProductItem from '../../components/shop/ProductItem';
 import * as cartActions from '../../store/actions/cart';
 import * as productActions from '../../store/actions/product';
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import HeaderButton from '../../components/UI/HeaderButton';
+import Loading from '../../components/UI/Loading';
 import Colors from "../../constants/Colors";
 
 const ProductsOverViewScreen = props => {
@@ -45,9 +46,7 @@ const ProductsOverViewScreen = props => {
     }, [dispatch, loadProducts]);
 
     if (isLoading) {
-        return <View style={[styles.centered]}>
-            <ActivityIndicator size="large" color={Colors.primary}/>
-        </View>;
+        return <Loading/>
     }
 
     if (error) {
