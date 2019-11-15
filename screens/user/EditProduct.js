@@ -65,7 +65,7 @@ const EditProduct = props => {
             } else {
                 await props.createProduct(title, description, +price, imageUrl);
             }
-            props.navigation.goBack();
+            // props.navigation.goBack();
         } catch (e) {
             setError(e.message);
         }
@@ -76,7 +76,7 @@ const EditProduct = props => {
 
     useEffect(() => {
         if (error) {
-            Alert.alert('An Error Occured', 'Please Check validations', [{text: 'Okey'}]);
+            Alert.alert('An Error Occured', error, [{text: 'Okey'}]);
         }
     }, [error]);
 

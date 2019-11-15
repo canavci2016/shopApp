@@ -1,4 +1,5 @@
 import Product from "../../models/product";
+
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const CREATE_PRODUCT = 'CREATE_PRODUCT';
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
@@ -48,14 +49,28 @@ export const createProduct = (title, description, price, imageUrl) => {
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-    return async dispatch => {
-        await fetch(`https://map-api-1531502761988.firebaseio.com/products/${id}.json`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({title, description, imageUrl}),
-        });
-        dispatch({type: UPDATE_PRODUCT, productId: id, productData: {title, description, imageUrl}});
+    return async (dispatch, getStateFunc) => {
+        const token = getStateFunc().auth.token;
+        console.log(token);
+        console.log(id);
+        try {
+            const response = await fetch(`https://map-api-1531502761988.firebaseio.com/products/${id}.json`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({title, description, imageUrl}),
+            });
+
+            if (!response.ok) {
+                const responseData = await response.json();
+                let message = responseData.error ? responseData.error : 'Something went wrong';
+                throw  new Error(message);
+            }
+
+            dispatch({type: UPDATE_PRODUCT, productId: id, productData: {title, description, imageUrl}});
+        } catch (e) {
+            throw  e;
+        }
     };
 };
