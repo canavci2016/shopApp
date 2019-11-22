@@ -1,4 +1,6 @@
 {
+  "name": "shopApp",
+  "displayName": "shopApp",
   "expo": {
     "name": "shopApp",
     "slug": "shopApp",

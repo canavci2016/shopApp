@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider} from "react-redux";
-import ShopNavigator from './navigation/ShopNavigator';
+import NavigationContainer from './navigation/NavigationContainer';
 
 import productReducer from './store/reducers/product';
 import cartReducter from './store/reducers/cart';
@@ -38,7 +38,7 @@ export default function App() {
 
     return (
         <Provider store={store}>
-            <ShopNavigator/>
+            <NavigationContainer/>
         </Provider>
     );
 }
